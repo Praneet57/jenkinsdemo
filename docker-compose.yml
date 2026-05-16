@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: >
+      bash -c "
+        echo 'Waiting for database...' &&
+        while ! python -c 'import socket; socket.create_connection((\"db\", 5432))' 2>/dev/null;
+        do echo 'DB not ready, retrying...' && sleep 3;
+        done &&
+        echo 'DB is ready!' &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    ports:
+      - "9010:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - "db"
+    restart: on-failure
+    environment:
+      - DB_HOST=db
+      - DB_NAME=student
+      - DB_USER=postgres
+      - DB_PASSWORD=praneet123*P
+
+  db:
+    image: postgres:18
+    environment:
+      - POSTGRES_DB=student
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=praneet123*P
+    ports:
+      - "5432:5432"
