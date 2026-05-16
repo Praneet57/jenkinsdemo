@@ -32,5 +32,3 @@ services:
       - POSTGRES_DB=student
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=praneet123*P
-    ports:
-      - "5432:5432"
